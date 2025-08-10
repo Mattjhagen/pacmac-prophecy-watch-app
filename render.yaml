@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: pacmac-prophecy-watch
+    env: node
+    plan: free
+    region: oregon
+    autoDeploy: true
+    buildCommand: npm install
+    startCommand: node server.js
+    healthCheckPath: /
+    envVars:
+      - key: VAPID_PUBLIC_KEY
+        sync: false
+      - key: VAPID_PRIVATE_KEY
+        sync: false
+      - key: VAPID_SUBJECT
+        value: mailto:info@pacmacmobile.com
