@@ -1,4 +1,4 @@
-
+require('dotenv').config();
 // server.js
 // Express server that fetches RSS feeds, tags items by topics, serves API, and handles Web Push.
 
