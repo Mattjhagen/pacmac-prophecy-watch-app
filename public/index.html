@@ -1,0 +1,41 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PacMac Prophecy Watch</title>
+  <link rel="stylesheet" href="/styles.css" />
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <meta name="theme-color" content="#070916" />
+</head>
+<body>
+  <canvas id="stars"></canvas>
+
+  <header class="site-header">
+    <div class="brand">
+      <div class="logo">🪐</div>
+      <div>
+        <h1>PacMac Prophecy Watch</h1>
+        <p class="tag">Current events with scripture references — space vibes intact.</p>
+      </div>
+    </div>
+    <div class="controls">
+      <input id="search" class="input" placeholder="Search headlines..." />
+      <select id="topicFilter" class="select"></select>
+      <button id="refresh" class="button">Refresh</button>
+    </div>
+  </header>
+
+  <main id="app" class="grid"></main>
+
+  <footer class="site-footer">
+    <p>
+      Scripture text from KJV (public domain). Feeds: Reuters, AP, BBC, Al Jazeera, NASA.
+      This site surfaces possible correlations; do your own Berean‑level study (Acts 17:11).
+    </p>
+  </footer>
+
+  <script src="/app.js"></script>
+</body>
+</html>
