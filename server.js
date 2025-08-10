@@ -19,7 +19,7 @@ app.use(express.static('public'));
 // [SECTION: WEB PUSH CONFIG]
 const VAPID_PUBLIC_KEY = process.env.VAPID_PUBLIC_KEY || '';
 const VAPID_PRIVATE_KEY = process.env.VAPID_PRIVATE_KEY || '';
-const VAPID_SUBJECT = process.env.VAPID_SUBJECT || 'mailto:admin@example.com';
+const VAPID_SUBJECT = process.env.VAPID_SUBJECT || 'mailto:info@pacmacmobile.com';
 
 if (VAPID_PUBLIC_KEY && VAPID_PRIVATE_KEY) {
   webpush.setVapidDetails(VAPID_SUBJECT, VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY);
@@ -32,12 +32,17 @@ const SUBSCRIPTIONS = new Set();
 
 // [SECTION: RSS FEEDS]
 const FEEDS = [
-  { name: 'Reuters World', url: 'https://www.reutersagency.com/feed/?best-topics=world&post_type=best' },
-  { name: 'AP Top Stories', url: 'https://feeds.apnews.com/apf-topnews' },
-  { name: 'BBC World', url: 'http://feeds.bbci.co.uk/news/world/rss.xml' },
+  // Official feeds
+  { name: 'BBC World', url: 'https://feeds.bbci.co.uk/news/world/rss.xml' }, // official
+  { name: 'NASA Breaking News', url: 'https://www.nasa.gov/rss/dyn/breaking_news.rss' }, // official (be gentle)
+  // Proxies via Google News RSS (stable and rate-friendly)
+  { name: 'Reuters (via Google News)', url: 'https://news.google.com/rss/search?q=site:reuters.com+when:7d&hl=en-US&gl=US&ceid=US:en' },
+  { name: 'AP (via Google News)', url: 'https://news.google.com/rss/search?q=site:apnews.com+when:7d&hl=en-US&gl=US&ceid=US:en' },
+  // A couple more solid, official feeds to diversify:
   { name: 'Al Jazeera', url: 'https://www.aljazeera.com/xml/rss/all.xml' },
-  { name: 'NASA News', url: 'https://www.nasa.gov/rss/dyn/breaking_news.rss' }
+  { name: 'The Guardian World', url: 'https://www.theguardian.com/world/rss' }
 ];
+
 
 // [SECTION: TOPIC KEYWORDS]
 const TOPICS = {
