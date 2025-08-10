@@ -206,3 +206,31 @@ setInterval(checkAndNotify, 5 * 60 * 1000);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`PacMac Prophecy Watch listening on http://localhost:${PORT}`));
+
+// [SECTION: TEST PUSH] — dev convenience; protect with a secret
+const TEST_PUSH_KEY = process.env.TEST_PUSH_KEY;
+
+app.post('/api/test-push', async (req, res) => {
+  if (!TEST_PUSH_KEY || req.query.key !== TEST_PUSH_KEY) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+  if (!VAPID_PUBLIC_KEY || !VAPID_PRIVATE_KEY) {
+    return res.status(400).json({ error: 'VAPID not configured' });
+  }
+  const payload = JSON.stringify({
+    title: 'Prophecy Watch — Test',
+    body: 'This is a test push. If you saw this, you are wired.',
+    url: '/'
+  });
+
+  let sent = 0;
+  for (const sub of Array.from(SUBSCRIPTIONS)) {
+    try {
+      await webpush.sendNotification(sub, payload);
+      sent++;
+    } catch (err) {
+      SUBSCRIPTIONS.delete(sub);
+    }
+  }
+  res.json({ ok: true, sent });
+});
