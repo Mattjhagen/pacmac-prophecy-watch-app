@@ -144,7 +144,7 @@ async function fetchAllFeeds() {
 app.get('/api/news', async (req, res) => {
   try {
     const news = await fetchAllFeeds();
-    res.json({ items: news });
+    res.json({ articles: news });
   } catch (e) {
     res.status(500).json({ error: 'Failed to fetch news' });
   }
