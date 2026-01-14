@@ -144,7 +144,7 @@ async function getAIVerse(articleText, verses) {
 }
 
 async function fetchAllFeeds() {
-  const cacheKey = 'ALL_NEWS';
+  const cacheKey = 'ALL_NEWS_V2';
   const cached = cache.get(cacheKey);
   if (cached) return cached;
 
