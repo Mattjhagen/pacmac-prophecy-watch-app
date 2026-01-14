@@ -115,6 +115,9 @@ function inferTopics(text) {
 }
 
 async function getAIVerse(articleText, verses) {
+  // Temporarily disable AI due to quota issues - use random selection
+  return verses[Math.floor(Math.random() * verses.length)];
+  /*
   if (!openai) {
     return verses[Math.floor(Math.random() * verses.length)]; // fallback
   }
@@ -141,6 +144,7 @@ async function getAIVerse(articleText, verses) {
     console.error('AI error:', e.message);
     return verses[Math.floor(Math.random() * verses.length)];
   }
+  */
 }
 
 async function fetchAllFeeds() {
