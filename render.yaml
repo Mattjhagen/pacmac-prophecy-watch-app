@@ -15,3 +15,5 @@ services:
         sync: false
       - key: VAPID_SUBJECT
         value: mailto:info@pacmacmobile.com
+      - key: OPENAI_API_KEY
+        sync: false

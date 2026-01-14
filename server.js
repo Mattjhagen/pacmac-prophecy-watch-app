@@ -7,10 +7,12 @@ const cors = require('cors');
 const Parser = require('rss-parser');
 const NodeCache = require('node-cache');
 const webpush = require('web-push');
+const OpenAI = require('openai');
 
 const app = express();
 const parser = new Parser({ timeout: 15000 });
 const cache = new NodeCache({ stdTTL: 600, checkperiod: 120 }); // cache ~10 mins
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 app.use(cors());
 app.use(express.json());
@@ -109,6 +111,33 @@ function inferTopics(text) {
   return [...found];
 }
 
+async function getAIVerse(articleText, verses) {
+  if (!process.env.OPENAI_API_KEY) {
+    return verses[Math.floor(Math.random() * verses.length)]; // fallback
+  }
+  const versesList = verses.map(v => `${v.ref}: ${v.text}`).join('; ');
+  const prompt = `Given this news article: "${articleText}", which of these KJV Bible verses related to end times prophecy does this event most closely reference? Choose one and respond with only the verse reference and text, like "Zechariah 12:2-3: Behold, I will make Jerusalem...". Verses: ${versesList}`;
+  try {
+    const response = await openai.chat.completions.create({
+      model: 'gpt-3.5-turbo',
+      messages: [{ role: 'user', content: prompt }],
+      max_tokens: 200
+    });
+    const text = response.choices[0].message.content.trim();
+    const colonIndex = text.indexOf(': ');
+    if (colonIndex > -1) {
+      const ref = text.substring(0, colonIndex);
+      const verseText = text.substring(colonIndex + 2);
+      return { ref, text: verseText };
+    } else {
+      return verses[Math.floor(Math.random() * verses.length)];
+    }
+  } catch (e) {
+    console.error('AI error:', e);
+    return verses[Math.floor(Math.random() * verses.length)];
+  }
+}
+
 async function fetchAllFeeds() {
   const cacheKey = 'ALL_NEWS';
   const cached = cache.get(cacheKey);
@@ -125,7 +154,7 @@ async function fetchAllFeeds() {
         if (topics.length > 0) {
           const allVerses = topics.flatMap(t => TOPICS[t].verses);
           if (allVerses.length > 0) {
-            verse = allVerses[Math.floor(Math.random() * allVerses.length)];
+            verse = await getAIVerse(textBlob, allVerses);
           }
         }
         results.push({
