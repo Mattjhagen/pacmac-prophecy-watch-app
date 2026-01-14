@@ -10,6 +10,7 @@ const NewsCard = ({ article }) => {
         </div>
         <div className="news-card-back">
           <p>{article.content}</p>
+          {article.verse && <p><strong>{article.verse.ref}</strong>: {article.verse.text}</p>}
           <a href={article.link} target="_blank" rel="noopener noreferrer">Read More</a>
         </div>
       </div>

@@ -121,12 +121,20 @@ async function fetchAllFeeds() {
       for (const item of data.items || []) {
         const textBlob = `${item.title || ''} ${item.contentSnippet || ''} ${item.content || ''}`;
         const topics = inferTopics(textBlob);
+        let verse = null;
+        if (topics.length > 0) {
+          const allVerses = topics.flatMap(t => TOPICS[t].verses);
+          if (allVerses.length > 0) {
+            verse = allVerses[Math.floor(Math.random() * allVerses.length)];
+          }
+        }
         results.push({
           source: feed.name,
           title: item.title || 'Untitled',
           link: item.link,
           isoDate: item.isoDate || item.pubDate || null,
           topics,
+          verse,
         });
       }
     } catch (e) {
