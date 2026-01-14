@@ -156,11 +156,15 @@ async function fetchAllFeeds() {
         const textBlob = `${item.title || ''} ${item.contentSnippet || ''} ${item.content || ''}`;
         const topics = inferTopics(textBlob);
         let verse = null;
+        let allVerses = [];
         if (topics.length > 0) {
-          const allVerses = topics.flatMap(t => TOPICS[t].verses);
-          if (allVerses.length > 0) {
-            verse = await getAIVerse(textBlob, allVerses);
-          }
+          allVerses = topics.flatMap(t => TOPICS[t].verses);
+        } else {
+          // If no topics, pick from all verses
+          allVerses = Object.values(TOPICS).flatMap(t => t.verses);
+        }
+        if (allVerses.length > 0) {
+          verse = await getAIVerse(textBlob, allVerses);
         }
         results.push({
           source: feed.name,
