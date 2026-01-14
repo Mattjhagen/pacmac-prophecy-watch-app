@@ -12,7 +12,10 @@ const OpenAI = require('openai');
 const app = express();
 const parser = new Parser({ timeout: 15000 });
 const cache = new NodeCache({ stdTTL: 600, checkperiod: 120 }); // cache ~10 mins
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+let openai = null;
+if (process.env.OPENAI_API_KEY) {
+  openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+}
 
 app.use(cors());
 app.use(express.json());
@@ -112,17 +115,19 @@ function inferTopics(text) {
 }
 
 async function getAIVerse(articleText, verses) {
-  if (!process.env.OPENAI_API_KEY) {
+  if (!openai) {
     return verses[Math.floor(Math.random() * verses.length)]; // fallback
   }
   const versesList = verses.map(v => `${v.ref}: ${v.text}`).join('; ');
   const prompt = `Given this news article: "${articleText}", which of these KJV Bible verses related to end times prophecy does this event most closely reference? Choose one and respond with only the verse reference and text, like "Zechariah 12:2-3: Behold, I will make Jerusalem...". Verses: ${versesList}`;
   try {
-    const response = await openai.chat.completions.create({
+    const responsePromise = openai.chat.completions.create({
       model: 'gpt-3.5-turbo',
       messages: [{ role: 'user', content: prompt }],
       max_tokens: 200
     });
+    const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 10000)); // 10s timeout
+    const response = await Promise.race([responsePromise, timeoutPromise]);
     const text = response.choices[0].message.content.trim();
     const colonIndex = text.indexOf(': ');
     if (colonIndex > -1) {
@@ -133,7 +138,7 @@ async function getAIVerse(articleText, verses) {
       return verses[Math.floor(Math.random() * verses.length)];
     }
   } catch (e) {
-    console.error('AI error:', e);
+    console.error('AI error:', e.message);
     return verses[Math.floor(Math.random() * verses.length)];
   }
 }
