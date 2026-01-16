@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: pacmac-prophecy-watch-ios
+    name: pacmac-prophecy-watch-mobile
     env: node
     plan: free
     region: oregon
