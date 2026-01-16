@@ -1,0 +1,8 @@
+{
+  "appId": "com.pacmac.prophecywatch",
+  "appName": "PacMac Prophecy Watch",
+  "webDir": "public",
+  "ios": {
+    "minVersion": "14.0"
+  }
+}
