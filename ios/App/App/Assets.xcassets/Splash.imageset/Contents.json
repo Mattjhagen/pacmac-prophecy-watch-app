@@ -1,16 +1,34 @@
 {
   "images": [
     {
+      "appearances": [
+        {
+          "appearance": "luminosity",
+          "value": "light"
+        }
+      ],
       "idiom": "universal",
       "filename": "Default@1x~universal~anyany.png",
       "scale": "1x"
     },
     {
+      "appearances": [
+        {
+          "appearance": "luminosity",
+          "value": "light"
+        }
+      ],
       "idiom": "universal",
       "filename": "Default@2x~universal~anyany.png",
       "scale": "2x"
     },
     {
+      "appearances": [
+        {
+          "appearance": "luminosity",
+          "value": "light"
+        }
+      ],
       "idiom": "universal",
       "filename": "Default@3x~universal~anyany.png",
       "scale": "3x"
